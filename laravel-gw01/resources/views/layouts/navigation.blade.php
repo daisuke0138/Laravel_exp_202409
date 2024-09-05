@@ -21,7 +21,10 @@
                     <x-nav-link :href="route('tweets.create')" :active="request()->routeIs('tweets.create')">
                     {{ __('Tweet作成') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('profile.my-profile-edit', ['user' => Auth::user()->id])" :active="request()->routeIs('profile.my-profile-edit')">
+                    <x-nav-link :href="route('users.index', ['user' => Auth::user()->id])" :active="request()->routeIs('users.index')">
+                    {{ __('Menbers list') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('profile.my-profile-show')" :active="request()->routeIs('profile.my-profile-show')">
                     {{ __('My profile') }}
                     </x-nav-link>
                 </div>
@@ -85,7 +88,10 @@
             <x-responsive-nav-link :href="route('tweets.create')" :active="request()->routeIs('tweets.create')">
             {{ __('Tweet作成') }}
             </x-responsive-nav-link>
-            <x-nav-link :href="route('profile.my-profile-edit', ['user' => Auth::user()->id])" :active="request()->routeIs('profile.my-profile-edit')">
+            <x-nav-link :href="route('users.index', ['user' => Auth::user()->id])" :active="request()->routeIs('users.index')">
+            {{ __('Menbers list') }}
+            </x-nav-link>
+            <x-nav-link :href="route('profile.my-profile-show')" :active="request()->routeIs('profile.my-profile-show')">
             {{ __('My profile') }}
             </x-nav-link>
         </div>
@@ -99,7 +105,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('change pass') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->

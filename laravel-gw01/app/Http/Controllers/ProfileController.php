@@ -22,14 +22,13 @@ class ProfileController extends Controller
         $user = auth()->user();
         
         // ルートパラメータとして渡されたユーザー情報を使用
-        return view('profile.edit', compact('user'));
-
+        return view('profile.my-profile-edit', compact('user'));
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(Request $request)
+    public function update(ProfileUpdateRequest $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -70,7 +69,7 @@ class ProfileController extends Controller
             'business_experience' => $request->business_experience,
         ]);
 
-        return redirect()->route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('profile.show')->with('status', 'profile-updated');
     }
 
     /**
@@ -78,11 +77,16 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
+         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
+
+        // プロフィール画像が存在する場合は削除
+        if ($user->profile_image) {
+            Storage::delete($user->profile_image);
+        }
 
         Auth::logout();
 
@@ -91,14 +95,20 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('/')->with('status', 'Profile deleted successfully.');
     }
 
-    public function myProfileEdit(User $user)
+    public function show()
     {
         // 現在のユーザーを取得
         $user = Auth::user();
         // ルートパラメータとして渡されたユーザー情報を使用
-        return view('profile.my-profile-edit', compact('user'));
+        return view('profile.my-profile-show', compact('user'));
+    }
+    //  * Show the form for editing the user's profile.
+    //  */
+    public function changePassword()
+    {
+        return view('profile.edit');
     }
 }

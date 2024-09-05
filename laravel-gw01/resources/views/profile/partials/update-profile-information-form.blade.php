@@ -112,9 +112,8 @@
             }
         </style>
 
-        <div class="flex items-center gap-4">
+        <div class="flex gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
-
             @if (session('status') === 'profile-updated')
                 <p
                     x-data="{ show: true }"
@@ -124,6 +123,16 @@
                     class="text-sm text-gray-600 dark:text-gray-400"
                 >{{ __('Saved.') }}</p>
             @endif
+            <x-primary-button>
+                <a href="{{ route('profile.show') }}">{{ __('Back') }}</a>
+            </x-primary-button>
+            <form method="POST" action="{{ route('profile.delete') }}">
+                @csrf
+                @method('DELETE')
+                <x-danger-button onclick="return confirm('{{ __('Are you sure you want to delete your profile?') }}')">
+                    {{ __('Delete') }}
+                </x-danger-button>
+            </form>
         </div>
     </form>
 </section>
