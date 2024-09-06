@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
         <!-- 画像アップロードフィールド -->
@@ -126,13 +126,13 @@
             <x-primary-button>
                 <a href="{{ route('profile.show') }}">{{ __('Back') }}</a>
             </x-primary-button>
-            <form method="POST" action="{{ route('profile.delete') }}">
+            <!-- <form method="PATCH" action="{{ route('profile.destroy') }}">
                 @csrf
                 @method('DELETE')
                 <x-danger-button onclick="return confirm('{{ __('Are you sure you want to delete your profile?') }}')">
                     {{ __('Delete') }}
-                </x-danger-button>
-            </form>
+                </x-danger-button> -->
+            <!-- </form> -->
         </div>
     </form>
 </section>

@@ -20,9 +20,16 @@ class ProfileController extends Controller
     {
         // 現在のユーザーを取得
         $user = auth()->user();
-        
+
         // ルートパラメータとして渡されたユーザー情報を使用
         return view('profile.my-profile-edit', compact('user'));
+    }
+
+
+    
+    public function Account_Management()
+    {
+        return view('profile.edit');
     }
 
     /**
@@ -68,8 +75,18 @@ class ProfileController extends Controller
             'hobby' => $request->hobby,
             'business_experience' => $request->business_experience,
         ]);
+        return Redirect::to('/profile/my-profile-show');
+    }
 
-        return redirect()->route('profile.show')->with('status', 'profile-updated');
+    /**
+     * Display the user's profile.
+     */
+    public function show()
+    {
+        // 現在のユーザーを取得
+        $user = Auth::user();
+        // ルートパラメータとして渡されたユーザー情報を使用
+        return view('profile.my-profile-show', compact('user'));
     }
 
     /**
@@ -95,20 +112,9 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/')->with('status', 'Profile deleted successfully.');
+        return Redirect::to('/register')->with('status', 'Profile deleted successfully.');
     }
 
-    public function show()
-    {
-        // 現在のユーザーを取得
-        $user = Auth::user();
-        // ルートパラメータとして渡されたユーザー情報を使用
-        return view('profile.my-profile-show', compact('user'));
-    }
-    //  * Show the form for editing the user's profile.
-    //  */
-    public function changePassword()
-    {
-        return view('profile.edit');
-    }
+
+
 }
