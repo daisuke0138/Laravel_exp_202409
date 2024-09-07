@@ -1,43 +1,17 @@
-# ①課題番号-プロダクト名
-ユーザー管理アプリ
+postmanを使って、userテーブルの登録している
+個人プロフィールの下記カラムの上書きが出来ず、レスポンスでは
+エラーが出ず、原因がわかっていません。
 
-## ②課題内容（どんな作品か）
-既存のuserテーブルにカラムを追加し、
-個人情報を充実させました。
+コントローラファイル
+\\wsl.localhost\Ubuntu\home\daisuke\gs_Graduation_work\laravel-gw01\app\Http\Controllers\Api\UserController.php
+下記関数で上書きを指示
+    public function updateUser(Request $request)
 
-個人プロフィールのCRUD処理をするページを追加し、navigationに表示。
-アカウント登録しているユーザーの一覧表を作成し、
-そこから各個人ページを表示できるようにしています。
+ルーティングのファイル
+\\wsl.localhost\Ubuntu\home\daisuke\gs_Graduation_work\laravel-gw01\routes\api.php
 
-## ③DEMO
-
-デプロイしている場合はURLを記入（任意）
-
-## ④作ったアプリケーション用のIDまたはPasswordがある場合
-
-なし
-
-## ⑤工夫した点・こだわった点
-作業工数を考えて、既存のコードを極力利用して、
-各ファイルがどことつながっているのかを知る
-勉強になりました。
+下記がルーティング
+    Route::put('user', [UserController::class, 'updateUser']);
 
 
-## ⑥難しかった点・次回トライしたいこと(又は機能)
-controllerの使い分けの理解が足りず、
-一度、再作成しました。
-同じテーブルを使用していたので
-使っていましたが、結果的にエラーになり解消するより
-再作成が早かったのでやり直しました。
-
-個人プロフィールのCRUD処理をしている"ProfileController"で
-ユーザーの一覧ページを作成して一覧に対してCRUD処理をさせようとして
-エラーになりました。
-
-## ⑦質問・疑問・感想、シェアしたいこと等なんでも
-画面遷移やデータ送受信をいろいろ追加していたら、
-ルーティングの理解度が少し上がりました。
-
-GitHub Copilotを使用してみました。
-このタイミングでの導入は作業がはかどって助かりました。
 
