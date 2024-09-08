@@ -10,11 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    // ユーザー情報の更新
     public function updateUser(Request $request)
     {
         $user = Auth::user();
 
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        // バリデーション
         $validatedData = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
@@ -27,8 +31,7 @@ class UserController extends Controller
             'business_experience' => 'sometimes|required|string|max:255',
         ]);
 
-        \Log::info('Validated Data:', $validatedData);
-
+        // ユーザー情報の更新
         if (isset($validatedData['name'])) {
             $user->name = $validatedData['name'];
         }
@@ -57,10 +60,16 @@ class UserController extends Controller
             $user->business_experience = $validatedData['business_experience'];
         }
 
-        $user->save();
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update user'], 500);
+        }
 
         return response()->json(['user' => $user]);
     }
+
+
 
     public function index(Request $request)
     {
@@ -71,6 +80,8 @@ class UserController extends Controller
     public function getUser(Request $request)
     {
         $user = Auth::user();
+        // デバッグのためにユーザー情報をダンプ
+        // dd($user);
         return response()->json(['user' => $user]);
     }
 }

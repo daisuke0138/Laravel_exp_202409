@@ -1,17 +1,35 @@
-postmanを使って、userテーブルの登録している
-個人プロフィールの下記カラムの上書きが出来ず、レスポンスでは
-エラーが出ず、原因がわかっていません。
+# ①課題番号-プロダクト名
+ユーザー管理アプリver02  (api追加)
 
-コントローラファイル
-\\wsl.localhost\Ubuntu\home\daisuke\gs_Graduation_work\laravel-gw01\app\Http\Controllers\Api\UserController.php
-下記関数で上書きを指示
-    public function updateUser(Request $request)
+## ②課題内容（どんな作品か）
+userテーブルに保存しているデータに対して
+以下の機能を追加したapiのuserコントローラを追加しています。
+①登録ユーザーの全員のプロフィール、個人プロフィールを表示(get)する
+②個人プロフィールの項目を修正(put)する
 
-ルーティングのファイル
-\\wsl.localhost\Ubuntu\home\daisuke\gs_Graduation_work\laravel-gw01\routes\api.php
+## ③DEMO
 
-下記がルーティング
-    Route::put('user', [UserController::class, 'updateUser']);
+-ありません。
+
+## ④作ったアプリケーション用のIDまたはPasswordがある場合
+
+なし
+
+## ⑤工夫した点・こだわった点
+
+現状できているブラウザからのCRUD処理を
+apiでも同様に行うこと。
+
+## ⑥難しかった点・次回トライしたいこと(又は機能)
+追加した
+②個人プロフィールの項目を修正(put)で、
+body形式を
+講義同様にform-data形式を使っていましたが、
+リクエストができていませんでした。
+row形式に切り替えることで
+リクエスト可能になりました。
+tweetやコメントはform-data形式でおくれていたので
+違いがどこから来るのかまだ理解ができていないです。
 
 
-
+## ⑦質問・疑問・感想、シェアしたいこと等なんでも
