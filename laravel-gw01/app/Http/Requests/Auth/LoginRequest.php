@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\JsonResponse;
 
 class LoginRequest extends FormRequest
 {
@@ -37,11 +38,19 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function authenticate(): JsonResponse
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $credentials = $this->only('email', 'password');
+
+        // APIリクエストかどうかを判別
+        $isApiRequest = $this->is('api/*');
+
+        // 適切なガードを選択
+        $guard = $isApiRequest ? 'api' : 'web';
+
+        if (! Auth::guard($guard)->attempt($credentials)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -49,8 +58,20 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $user = Auth::guard($guard)->user();
+
         RateLimiter::clear($this->throttleKey());
+
+        if ($isApiRequest) {
+            // APIリクエストの場合はトークンを生成
+            $token = $user->createToken('Personal Access Token')->plainTextToken;
+            return response()->json(['token' => $token], 200);
+        } else {
+            // ブラウザリクエストの場合はセッションを使用
+            return response()->json(['message' => 'Login successful'], 200);
+        }
     }
+
 
     /**
      * Ensure the login request is not rate limited.

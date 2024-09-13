@@ -17,19 +17,22 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
-
+        // dd($user);
+        
         // バリデーション
         $validatedData = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'sometimes|required|string|min:8',
-            'department' => 'sometimes|required|string|max:255',
-            'class' => 'sometimes|required|string|max:255',
-            'profile_image' => 'sometimes|required|string|max:255',
-            'number' => 'sometimes|required|string|max:255',
-            'hobby' => 'sometimes|required|string|max:255',
-            'business_experience' => 'sometimes|required|string|max:255',
+            'department' => 'sometimes|nullable|string|max:255',
+            'class' => 'sometimes|nullable|string|max:255',
+            'profile_image' => 'sometimes|nullable|string|max:255',
+            'number' => 'sometimes|nullable|string|max:255',
+            'hobby' => 'sometimes|nullable|string|max:255',
+            'business_experience' => 'sometimes|nullable|string|max:255',
         ]);
+
+        \Log::info('Request Data: ', $request->all());
 
         // ユーザー情報の更新
         if (isset($validatedData['name'])) {
@@ -59,6 +62,7 @@ class UserController extends Controller
         if (isset($validatedData['business_experience'])) {
             $user->business_experience = $validatedData['business_experience'];
         }
+
 
         try {
             $user->save();

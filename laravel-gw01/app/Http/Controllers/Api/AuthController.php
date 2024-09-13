@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-// 🔽 3行追加
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Auth;
+// use Auth;
 
 class AuthController extends Controller
 {
@@ -33,34 +32,32 @@ class AuthController extends Controller
       'token_type' => 'Bearer',
     ]);
   }
-    public function login(Request $request)
-  {
-    $request->validate([
-      'email' => 'required|email',
-      'password' => 'required',
-    ]);
+public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
 
-    if (!Auth::attempt($request->only('email', 'password'))) {
-      return response()->json([
-        'message' => 'Invalid login details'
-      ], 401);
+        if (Auth::guard('web')->attempt($credentials)) {
+            $user = Auth::guard('web')->user();
+            $token = $user->createToken('authToken')->plainTextToken;
+            return response()->json(['message' => 'Successfully logged in', 'user' => $user, 'token' => $token]);
+        }
+
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
-    $user = User::where('email', $request['email'])->firstOrFail();
 
-    $token = $user->createToken('auth_token')->plainTextToken;
+    public function logout(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
 
-    return response()->json([
-      'access_token' => $token,
-      'token_type' => 'Bearer',
-    ]);
-  }
-  public function logout(Request $request)
-  {
-    $request->user()->currentAccessToken()->delete();
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
 
-    return response()->json(['message' => 'Successfully logged out']);
-  }
+        $user->tokens()->delete();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
 }
 
 
